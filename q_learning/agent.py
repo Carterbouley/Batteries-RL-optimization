@@ -6,7 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
 
-def mlp(n_obs, n_action, n_hidden_layer=1, n_neuron_per_layer=32,
+def mlp(n_obs, n_action, display=True, n_hidden_layer=1, n_neuron_per_layer=32,
         activation='relu', loss='mse'):
     """ A multi-layer perceptron """
     model = Sequential()
@@ -15,12 +15,12 @@ def mlp(n_obs, n_action, n_hidden_layer=1, n_neuron_per_layer=32,
         model.add(Dense(n_neuron_per_layer, activation=activation))
     model.add(Dense(n_action, activation='linear'))
     model.compile(loss=loss, optimizer=Adam())
-    print(model.summary())
+    if display: print(model.summary())
     return model
 
 class DQNAgent(object):
     """ A simple Deep Q agent """
-    def __init__(self, state_size, action_size):
+    def __init__(self, state_size, action_size, display=True):
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
@@ -28,8 +28,8 @@ class DQNAgent(object):
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
-        self.model = mlp(state_size, action_size)
-        self.tmodel = mlp(state_size, action_size)
+        self.model = mlp(state_size, action_size, display)
+        self.tmodel = mlp(state_size, action_size, display=False)
 
     # Applies the action chozen at the previous timestamp to the
     # current time and load data. For example, if 1 hour ago we choose to

@@ -102,7 +102,7 @@ class Env(gym.Env):
         real_action = self._real_action(action)
         ACTIONS[real_action](self, self._user_consumption())
         reward = self.reward_func(self, self._user_consumption(), self._consumption_to_pay())
-        info = {'cur_val': reward }
+        info = {'cur_val': cost_diff(self, self._user_consumption(), self._consumption_to_pay()) }
 
         # self.all_history.append(
         #     (
