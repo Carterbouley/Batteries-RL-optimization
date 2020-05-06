@@ -20,10 +20,10 @@ def mlp(n_obs, n_action, display=True, n_hidden_layer=1, n_neuron_per_layer=32,
 
 class DQNAgent(object):
     """ A simple Deep Q agent """
-    def __init__(self, state_size, action_size, display=True):
+    def __init__(self, state_size, action_size, display=True, memory_size=2000):
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen=2000)
+        self.memory = deque(maxlen=memory_size)
         self.gamma = 0.95  # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01

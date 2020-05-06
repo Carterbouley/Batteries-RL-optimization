@@ -6,4 +6,4 @@ if __name__ == '__main__':
     df = utils.get_data()
     weights_dir = './q_learning/weights'
     portfolio_dir = './q_learning/portfolio_val'
-    run(df, weights_dir, portfolio_dir)
+    run(df, weights_dir, portfolio_dir, batch_size=32, memory_size=2000)
