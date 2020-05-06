@@ -71,13 +71,13 @@ class Env(gym.Env):
         return [seed]
 
     def _reset(self):
-        self.cur_step = 1
+        self.cur_step = 0
         self.history = [self.consumption_history[0]]
         # self.battery_level = 0
         return self._get_current_state()
 
     def _get_current_state(self):
-        return [self.battery_level, self._user_consumption()]
+        return [self.battery_level, self._consumption_to_pay()]
 
     def _user_consumption(self):
         return self.consumption_history[self.cur_step]
@@ -98,6 +98,7 @@ class Env(gym.Env):
         assert self.action_space.contains(action)
         _prev_battery_level = self.battery_level
 
+        self.cur_step += 1
         real_action = self._real_action(action)
         ACTIONS[real_action](self, self._user_consumption())
         reward = self.reward_func(self, self._user_consumption(), self._consumption_to_pay())
@@ -117,7 +118,5 @@ class Env(gym.Env):
         #         reward
         #     )
         # )
-
-        self.cur_step += 1
         done = self.cur_step == self.n_step - 1
         return self._get_current_state(), reward, done, info

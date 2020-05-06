@@ -7,7 +7,7 @@ from .environment import Env, cost_diff
 from .utils import get_scaler, make_dir
 
 def run(df, weights_dir, portfolio_dir, train_coef=0.8, initial_battery_level=200,
-        mode='train', episode=2, batch_size=32):
+        mode='train', episode=5, batch_size=32):
     train_size = int(df.shape[0] * train_coef)
     print("Train data size", train_size)
     train_data = df[:train_size]
@@ -54,7 +54,7 @@ def run(df, weights_dir, portfolio_dir, train_coef=0.8, initial_battery_level=20
                 break
             if mode == 'train' and len(agent.memory) > batch_size:
                 history = agent.replay(batch_size, i % 100 == 0)
-                if i % 1000 == 0:
+                if i % 2000 == 0:
                     print("{:,.2f}".format(history.history['loss'][0]))
         if mode == 'train' and (e + 1) % 10 == 0:
             agent.save('{}/{}-dqn.h5'.format(weights_dir, timestamp))
