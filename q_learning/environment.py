@@ -30,6 +30,9 @@ ACTION_NAMES = ['wait', 'charge', 'discharge']
 def cost(load):
     return np.sum(5 + 0.5 * load + 0.05 * load ** 2)
 
+def cost_normalized(env, consumption_without_bot, consumption_with_bot):
+    return cost_diff(env, consumption_without_bot, consumption_with_bot) / 100
+
 def cost_diff(env, consumption_without_bot, consumption_with_bot):
     return cost(consumption_without_bot) - cost(consumption_with_bot)
 
@@ -42,7 +45,7 @@ def cost_by_24h_diff(env, consumption_without_bot, consumption_with_bot):
     return cost_sum
 
 class Env(gym.Env):
-    def __init__(self, train_data, battery_level=200, reward_func=cost_diff):
+    def __init__(self, train_data, battery_level=200, reward_func=cost_normalized):
         self.battery_level = battery_level
         self.consumption_history = train_data
         self.battery_capacity = 400

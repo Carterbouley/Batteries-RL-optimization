@@ -12,7 +12,7 @@ def run(df, weights_dir, portfolio_dir, train_coef=0.8, initial_battery_level=20
     print("Train data size", train_size)
     train_data = df[:train_size]
     test_data = df[train_size:]
-    env = Env(train_data['load'].values, initial_battery_level, reward_func=cost_diff)
+    env = Env(train_data['load'].values, initial_battery_level)
     state_size = env.observation_space.shape
     print("State size:", state_size)
     action_size = env.action_space.n
@@ -32,7 +32,7 @@ def run(df, weights_dir, portfolio_dir, train_coef=0.8, initial_battery_level=20
         agent.epsilon = 0.01
         agent.load(weights)
         timestamp = re.findall(r'\d{12}', weights)[0]
-        env = Env(test_data['load'].values, initial_battery_level, reward_func=cost_diff)
+        env = Env(test_data['load'].values, initial_battery_level)
 
     for e in range(episode):
         state = env.reset()
@@ -53,7 +53,7 @@ def run(df, weights_dir, portfolio_dir, train_coef=0.8, initial_battery_level=20
                 portfolio_value.append(info['cur_val'])
                 break
             if mode == 'train' and len(agent.memory) > batch_size:
-                history = agent.replay(batch_size)
+                history = agent.replay(batch_size, i % 100 == 0)
                 if i % 1000 == 0:
                     print("{:,.2f}".format(history.history['loss'][0]))
         if mode == 'train' and (e + 1) % 10 == 0:

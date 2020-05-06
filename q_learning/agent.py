@@ -29,6 +29,7 @@ class DQNAgent(object):
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
         self.model = mlp(state_size, action_size)
+        self.tmodel = mlp(state_size, action_size)
 
     # Applies the action chozen at the previous timestamp to the
     # current time and load data. For example, if 1 hour ago we choose to
@@ -48,10 +49,9 @@ class DQNAgent(object):
         act_values = self.model.predict(state)
         return np.argmax(act_values[0])
 
-    def replay(self, batch_size=32):
+    def replay(self, batch_size=32, copy_weights=False):
         """ vectorized implementation; 30x speed up compared with for loop """
         minibatch = random.sample(self.memory, batch_size)
-        # import pdb; pdb.set_trace()
         states = np.array([tup[0][0] for tup in minibatch])
         actions = np.array([tup[1] for tup in minibatch])
         rewards = np.array([tup[2] for tup in minibatch])
@@ -59,17 +59,20 @@ class DQNAgent(object):
         done = np.array([tup[4] for tup in minibatch])
 
         # Q(s', a)
-        target = rewards + self.gamma * np.amax(self.model.predict(next_states), axis=1)
+        target = rewards + self.gamma * np.amax(self.tmodel.predict(next_states), axis=1)
         # end state target is reward itself (no lookahead)
         target[done] = rewards[done]
 
         # Q(s, a)
-        target_f = self.model.predict(states)
+        target_f = self.tmodel.predict(states)
         # make the agent to approximately map the current state to future discounted reward
         target_f[range(batch_size), actions] = target
 
         history = self.model.fit(states, target_f, epochs=1, verbose=0)
-        import pdb; pdb.set_trace();
+        # import pdb; pdb.set_trace();
+
+        if copy_weights:
+            self.tmodel.set_weights(self.model.get_weights())
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
         return history
