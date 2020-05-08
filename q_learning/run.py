@@ -11,6 +11,7 @@ def test(df, weights, scaler, initial_battery_level=200):
     env = Env(df['load'].values, initial_battery_level)
     state_size = env.observation_space.shape
     action_size = env.action_space.n
+    pdb.set_trace()
     agent = DQNAgent(state_size, action_size, display=False)
     agent.model.set_weights(weights)
     agent.epsilon = 0

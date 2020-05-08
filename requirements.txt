@@ -4,4 +4,5 @@ keras
 tensorflow
 sklearn
 h5py
+torch
 gym==0.9.4
