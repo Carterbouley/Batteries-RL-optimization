@@ -32,7 +32,7 @@ jobs:
       run: |
         #ls
         cd sa_mm
-        python -m unittest test
+        python -m unittest test -v
         #pwd
         #ls
 
