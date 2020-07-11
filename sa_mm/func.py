@@ -6,4 +6,4 @@ Created on Sun Jul 12 00:50:25 2020
 """
 
 def add_function(a, b):
-    return a+b
+    return a+b+1
