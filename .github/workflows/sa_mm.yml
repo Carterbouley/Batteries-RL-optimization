@@ -28,7 +28,8 @@ jobs:
     
     # Run tests
     - name: Run tests
-      run: python -m unittest  /sa_mm/test.py
+    #  run: python -m unittest  /sa_mm/test.py
+      run: pwd
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
